@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"grpc/models"
+	"github.com/nicrodriguezval/grpc/models"
 )
 
 type Repository interface {
