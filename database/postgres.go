@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	_ "github.com/lib/pq"
-	"grpc/models"
+	"github.com/nicrodriguezval/grpc/models"
 )
 
 type PostgresRepository struct {
