@@ -14,11 +14,11 @@ message GetStudentRequest {
   string id = 1;
 }
 
-message SetStudentResponse {
+message CreateStudentResponse {
   string id = 1;
 }
 
 service StudentService {
   rpc GetStudent(GetStudentRequest) returns (Student) {}
-  rpc SetStudent(Student) returns (SetStudentResponse) {}
+  rpc CreateStudent(Student) returns (CreateStudentResponse) {}
 }

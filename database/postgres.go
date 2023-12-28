@@ -20,7 +20,7 @@ func NewPostgresRepository(url string) (*PostgresRepository, error) {
 	return &PostgresRepository{db}, nil
 }
 
-func (r *PostgresRepository) SetStudent(ctx context.Context, student *models.Student) error {
+func (r *PostgresRepository) CreateStudent(ctx context.Context, student *models.Student) error {
 	_, err := r.db.ExecContext(ctx, "INSERT INTO students (name, age) VALUES ($1, $2)", student.Name, student.Age)
 	return err
 }
