@@ -3,32 +3,32 @@ package server
 import (
 	"context"
 	"github.com/nicrodriguezval/grpc/models"
+	testpb2 "github.com/nicrodriguezval/grpc/protos/testpb"
 	"github.com/nicrodriguezval/grpc/repository"
-	"github.com/nicrodriguezval/grpc/testpb"
 )
 
 type TestServer struct {
 	repo repository.Repository
-	testpb.UnimplementedTestServiceServer
+	testpb2.UnimplementedTestServiceServer
 }
 
 func NewTestServer(repo repository.Repository) *TestServer {
 	return &TestServer{repo: repo}
 }
 
-func (s *TestServer) GetTest(ctx context.Context, req *testpb.GetTestRequest) (*testpb.Test, error) {
+func (s *TestServer) GetTest(ctx context.Context, req *testpb2.GetTestRequest) (*testpb2.Test, error) {
 	test, err := s.repo.GetTest(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}
 
-	return &testpb.Test{
+	return &testpb2.Test{
 		Id:   test.Id,
 		Name: test.Name,
 	}, nil
 }
 
-func (s *TestServer) CreateTest(ctx context.Context, req *testpb.Test) (*testpb.CreateTestResponse, error) {
+func (s *TestServer) CreateTest(ctx context.Context, req *testpb2.Test) (*testpb2.CreateTestResponse, error) {
 	test := &models.Test{
 		Id:   req.GetId(),
 		Name: req.GetName(),
@@ -38,7 +38,7 @@ func (s *TestServer) CreateTest(ctx context.Context, req *testpb.Test) (*testpb.
 		return nil, err
 	}
 
-	return &testpb.CreateTestResponse{
+	return &testpb2.CreateTestResponse{
 		Id: test.Id,
 	}, nil
 }

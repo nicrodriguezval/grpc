@@ -2,9 +2,10 @@ package main
 
 import (
 	"github.com/nicrodriguezval/grpc/database"
-	svr "github.com/nicrodriguezval/grpc/server"
-	"github.com/nicrodriguezval/grpc/studentpb"
-	"github.com/nicrodriguezval/grpc/testpb"
+	"github.com/nicrodriguezval/grpc/protos/questionpb"
+	"github.com/nicrodriguezval/grpc/protos/studentpb"
+	"github.com/nicrodriguezval/grpc/protos/testpb"
+	"github.com/nicrodriguezval/grpc/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -28,13 +29,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	studentServer := svr.NewStudentServer(repo)
-	testServer := svr.NewTestServer(repo)
+	studentServer := server.NewStudentServer(repo)
+	testServer := server.NewTestServer(repo)
+	questionServer := server.NewQuestionServer(repo)
 
 	s := grpc.NewServer()
 
 	studentpb.RegisterStudentServiceServer(s, studentServer)
 	testpb.RegisterTestServiceServer(s, testServer)
+	questionpb.RegisterQuestionServiceServer(s, questionServer)
 
 	reflection.Register(s)
 

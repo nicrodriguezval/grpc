@@ -18,6 +18,6 @@ message CreateTestResponse {
 }
 
 service TestService {
-  rpc GetTest(GetTestRequest) returns (Test) {}
-  rpc CreateTest(Test) returns (CreateTestResponse) {}
+  rpc GetTest(GetTestRequest) returns (Test);
+  rpc CreateTest(Test) returns (CreateTestResponse);
 }

@@ -52,6 +52,11 @@ func (r *PostgresRepository) GetTest(ctx context.Context, id string) (*models.Te
 	return &test, nil
 }
 
+func (r *PostgresRepository) CreateQuestion(ctx context.Context, question *models.Question) error {
+	_, err := r.db.ExecContext(ctx, "INSERT INTO questions (id, test_id, question, answer) VALUES ($1, $2, $3, $4)", question.Id, question.TestId, question.Question, question.Answer)
+	return err
+}
+
 func (r *PostgresRepository) Close() error {
 	return r.db.Close()
 }

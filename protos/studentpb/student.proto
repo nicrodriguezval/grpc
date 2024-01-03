@@ -19,6 +19,6 @@ message CreateStudentResponse {
 }
 
 service StudentService {
-  rpc GetStudent(GetStudentRequest) returns (Student) {}
-  rpc CreateStudent(Student) returns (CreateStudentResponse) {}
+  rpc GetStudent(GetStudentRequest) returns (Student);
+  rpc CreateStudent(Student) returns (CreateStudentResponse);
 }

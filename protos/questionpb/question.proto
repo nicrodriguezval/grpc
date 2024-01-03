@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package question;
+
+option go_package = "github.com/nicrodriguezval/grpc;questionpb";
+
+message Question {
+  string id = 1;
+  string answer = 2;
+  string question = 3;
+  string test_id = 4;
+}
+
+message CreateQuestionResponse {
+  bool ok = 1;
+}
+
+service QuestionService {
+  rpc CreateQuestions(stream Question) returns (CreateQuestionResponse);
+}

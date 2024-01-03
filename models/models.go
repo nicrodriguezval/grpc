@@ -1,12 +1,19 @@
 package models
 
 type Student struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-	Age  int32  `json:"age"`
+	Id   string
+	Name string
+	Age  int32
 }
 
 type Test struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id   string
+	Name string
+}
+
+type Question struct {
+	Id       string
+	Question string
+	Answer   string
+	TestId   string
 }
