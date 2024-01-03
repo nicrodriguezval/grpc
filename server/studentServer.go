@@ -7,16 +7,16 @@ import (
 	"github.com/nicrodriguezval/grpc/studentpb"
 )
 
-type Server struct {
+type StudentServer struct {
 	repo repository.Repository
 	studentpb.UnimplementedStudentServiceServer
 }
 
-func NewServer(repo repository.Repository) *Server {
-	return &Server{repo: repo}
+func NewStudentServer(repo repository.Repository) *StudentServer {
+	return &StudentServer{repo: repo}
 }
 
-func (s *Server) GetStudent(ctx context.Context, req *studentpb.GetStudentRequest) (*studentpb.Student, error) {
+func (s *StudentServer) GetStudent(ctx context.Context, req *studentpb.GetStudentRequest) (*studentpb.Student, error) {
 	student, err := s.repo.GetStudent(ctx, req.GetId())
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (s *Server) GetStudent(ctx context.Context, req *studentpb.GetStudentReques
 	}, nil
 }
 
-func (s *Server) CreateStudent(ctx context.Context, req *studentpb.Student) (*studentpb.CreateStudentResponse, error) {
+func (s *StudentServer) CreateStudent(ctx context.Context, req *studentpb.Student) (*studentpb.CreateStudentResponse, error) {
 	student := &models.Student{
 		Id:   req.GetId(),
 		Name: req.GetName(),

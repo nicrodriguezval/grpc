@@ -4,6 +4,7 @@ import (
 	"github.com/nicrodriguezval/grpc/database"
 	svr "github.com/nicrodriguezval/grpc/server"
 	"github.com/nicrodriguezval/grpc/studentpb"
+	"github.com/nicrodriguezval/grpc/testpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -27,10 +28,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server := svr.NewServer(repo)
+	studentServer := svr.NewStudentServer(repo)
+	testServer := svr.NewTestServer(repo)
 
 	s := grpc.NewServer()
-	studentpb.RegisterStudentServiceServer(s, server)
+
+	studentpb.RegisterStudentServiceServer(s, studentServer)
+	testpb.RegisterTestServiceServer(s, testServer)
+
 	reflection.Register(s)
 
 	if err := s.Serve(list); err != nil {
