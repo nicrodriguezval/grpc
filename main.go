@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/nicrodriguezval/grpc/database"
+	"github.com/nicrodriguezval/grpc/protos/enrollmentpb"
 	"github.com/nicrodriguezval/grpc/protos/questionpb"
 	"github.com/nicrodriguezval/grpc/protos/studentpb"
 	"github.com/nicrodriguezval/grpc/protos/testpb"
@@ -32,12 +33,14 @@ func main() {
 	studentServer := server.NewStudentServer(repo)
 	testServer := server.NewTestServer(repo)
 	questionServer := server.NewQuestionServer(repo)
+	enrollmentServer := server.NewEnrollmentServer(repo)
 
 	s := grpc.NewServer()
 
 	studentpb.RegisterStudentServiceServer(s, studentServer)
 	testpb.RegisterTestServiceServer(s, testServer)
 	questionpb.RegisterQuestionServiceServer(s, questionServer)
+	enrollmentpb.RegisterEnrollmentServiceServer(s, enrollmentServer)
 
 	reflection.Register(s)
 

@@ -22,7 +22,7 @@ func (s *QuestionServer) CreateQuestions(stream questionpb.QuestionService_Creat
 		msg, err := stream.Recv()
 		if err == io.EOF {
 			return stream.SendAndClose(&questionpb.CreateQuestionResponse{
-				Ok: true,
+				Success: true,
 			})
 		}
 		if err != nil {
@@ -39,7 +39,7 @@ func (s *QuestionServer) CreateQuestions(stream questionpb.QuestionService_Creat
 		err = s.repo.CreateQuestion(context.Background(), question)
 		if err != nil {
 			return stream.SendAndClose(&questionpb.CreateQuestionResponse{
-				Ok: false,
+				Success: false,
 			})
 		}
 	}

@@ -11,4 +11,6 @@ type Repository interface {
 	GetTest(ctx context.Context, id string) (*models.Test, error)
 	CreateTest(ctx context.Context, test *models.Test) error
 	CreateQuestion(ctx context.Context, question *models.Question) error
+	Enroll(ctx context.Context, enrollment *models.Enrollment) error
+	GetStudentsPerTest(ctx context.Context, testId string) ([]*models.Student, error)
 }

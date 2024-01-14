@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	_ "github.com/lib/pq"
 	"github.com/nicrodriguezval/grpc/models"
+	"log"
 )
 
 type PostgresRepository struct {
@@ -55,6 +56,37 @@ func (r *PostgresRepository) GetTest(ctx context.Context, id string) (*models.Te
 func (r *PostgresRepository) CreateQuestion(ctx context.Context, question *models.Question) error {
 	_, err := r.db.ExecContext(ctx, "INSERT INTO questions (id, test_id, question, answer) VALUES ($1, $2, $3, $4)", question.Id, question.TestId, question.Question, question.Answer)
 	return err
+}
+
+func (r *PostgresRepository) Enroll(ctx context.Context, enrollment *models.Enrollment) error {
+	_, err := r.db.ExecContext(ctx, "INSERT INTO enrollments (id, student_id, test_id) VALUES ($1, $2, $3)", enrollment.Id, enrollment.StudentId, enrollment.TestId)
+	return err
+}
+
+func (r *PostgresRepository) GetStudentsPerTest(ctx context.Context, testId string) ([]*models.Student, error) {
+	rows, err := r.db.QueryContext(ctx, "SELECT s.id, s.name, s.age FROM students s INNER JOIN enrollments e ON s.id = e.student_id WHERE e.test_id = $1", testId)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	students := make([]*models.Student, 0)
+	for rows.Next() {
+		student := models.Student{}
+		err := rows.Scan(&student.Id, &student.Name, &student.Age)
+		if err != nil {
+			return nil, err
+		}
+		students = append(students, &student)
+	}
+
+	return students, nil
 }
 
 func (r *PostgresRepository) Close() error {

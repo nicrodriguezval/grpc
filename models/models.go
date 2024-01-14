@@ -17,3 +17,9 @@ type Question struct {
 	Answer   string
 	TestId   string
 }
+
+type Enrollment struct {
+	Id        string
+	StudentId string
+	TestId    string
+}
