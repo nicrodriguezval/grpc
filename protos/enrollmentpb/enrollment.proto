@@ -21,6 +21,6 @@ message GetStudentPerTestRequest {
 }
 
 service EnrollmentService {
-  rpc Enroll(stream EnrollmentRequest) returns (EnrollmentResponse) {}
-  rpc GetStudentPerTest(GetStudentPerTestRequest) returns (stream student.Student) {}
+  rpc Enroll(stream EnrollmentRequest) returns (EnrollmentResponse);
+  rpc GetStudentPerTest(GetStudentPerTestRequest) returns (stream student.Student);
 }
