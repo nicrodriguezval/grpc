@@ -16,11 +16,11 @@ message EnrollmentResponse {
   bool success = 1;
 }
 
-message GetStudentPerTestRequest {
+message GetStudentsPerTestRequest {
   string test_id = 1;
 }
 
 service EnrollmentService {
   rpc Enroll(stream EnrollmentRequest) returns (EnrollmentResponse);
-  rpc GetStudentPerTest(GetStudentPerTestRequest) returns (stream student.Student);
+  rpc GetStudentsPerTest(GetStudentsPerTestRequest) returns (stream student.Student);
 }

@@ -46,9 +46,9 @@ func (s *EnrollmentServer) Enroll(stream enrollmentpb.EnrollmentService_EnrollSe
 	}
 }
 
-func (s *EnrollmentServer) GetStudentPerTest(
-	req *enrollmentpb.GetStudentPerTestRequest,
-	stream enrollmentpb.EnrollmentService_GetStudentPerTestServer,
+func (s *EnrollmentServer) GetStudentsPerTest(
+	req *enrollmentpb.GetStudentsPerTestRequest,
+	stream enrollmentpb.EnrollmentService_GetStudentsPerTestServer,
 ) error {
 	students, err := s.repo.GetStudentsPerTest(context.Background(), req.GetTestId())
 	if err != nil {

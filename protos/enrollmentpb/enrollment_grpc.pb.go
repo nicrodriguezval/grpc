@@ -20,8 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	EnrollmentService_Enroll_FullMethodName            = "/enrollment.EnrollmentService/Enroll"
-	EnrollmentService_GetStudentPerTest_FullMethodName = "/enrollment.EnrollmentService/GetStudentPerTest"
+	EnrollmentService_Enroll_FullMethodName             = "/enrollment.EnrollmentService/Enroll"
+	EnrollmentService_GetStudentsPerTest_FullMethodName = "/enrollment.EnrollmentService/GetStudentsPerTest"
 )
 
 // EnrollmentServiceClient is the client API for EnrollmentService service.
@@ -29,7 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EnrollmentServiceClient interface {
 	Enroll(ctx context.Context, opts ...grpc.CallOption) (EnrollmentService_EnrollClient, error)
-	GetStudentPerTest(ctx context.Context, in *GetStudentPerTestRequest, opts ...grpc.CallOption) (EnrollmentService_GetStudentPerTestClient, error)
+	GetStudentsPerTest(ctx context.Context, in *GetStudentsPerTestRequest, opts ...grpc.CallOption) (EnrollmentService_GetStudentsPerTestClient, error)
 }
 
 type enrollmentServiceClient struct {
@@ -74,12 +74,12 @@ func (x *enrollmentServiceEnrollClient) CloseAndRecv() (*EnrollmentResponse, err
 	return m, nil
 }
 
-func (c *enrollmentServiceClient) GetStudentPerTest(ctx context.Context, in *GetStudentPerTestRequest, opts ...grpc.CallOption) (EnrollmentService_GetStudentPerTestClient, error) {
-	stream, err := c.cc.NewStream(ctx, &EnrollmentService_ServiceDesc.Streams[1], EnrollmentService_GetStudentPerTest_FullMethodName, opts...)
+func (c *enrollmentServiceClient) GetStudentsPerTest(ctx context.Context, in *GetStudentsPerTestRequest, opts ...grpc.CallOption) (EnrollmentService_GetStudentsPerTestClient, error) {
+	stream, err := c.cc.NewStream(ctx, &EnrollmentService_ServiceDesc.Streams[1], EnrollmentService_GetStudentsPerTest_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &enrollmentServiceGetStudentPerTestClient{stream}
+	x := &enrollmentServiceGetStudentsPerTestClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -89,16 +89,16 @@ func (c *enrollmentServiceClient) GetStudentPerTest(ctx context.Context, in *Get
 	return x, nil
 }
 
-type EnrollmentService_GetStudentPerTestClient interface {
+type EnrollmentService_GetStudentsPerTestClient interface {
 	Recv() (*studentpb.Student, error)
 	grpc.ClientStream
 }
 
-type enrollmentServiceGetStudentPerTestClient struct {
+type enrollmentServiceGetStudentsPerTestClient struct {
 	grpc.ClientStream
 }
 
-func (x *enrollmentServiceGetStudentPerTestClient) Recv() (*studentpb.Student, error) {
+func (x *enrollmentServiceGetStudentsPerTestClient) Recv() (*studentpb.Student, error) {
 	m := new(studentpb.Student)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (x *enrollmentServiceGetStudentPerTestClient) Recv() (*studentpb.Student, e
 // for forward compatibility
 type EnrollmentServiceServer interface {
 	Enroll(EnrollmentService_EnrollServer) error
-	GetStudentPerTest(*GetStudentPerTestRequest, EnrollmentService_GetStudentPerTestServer) error
+	GetStudentsPerTest(*GetStudentsPerTestRequest, EnrollmentService_GetStudentsPerTestServer) error
 	mustEmbedUnimplementedEnrollmentServiceServer()
 }
 
@@ -122,8 +122,8 @@ type UnimplementedEnrollmentServiceServer struct {
 func (UnimplementedEnrollmentServiceServer) Enroll(EnrollmentService_EnrollServer) error {
 	return status.Errorf(codes.Unimplemented, "method Enroll not implemented")
 }
-func (UnimplementedEnrollmentServiceServer) GetStudentPerTest(*GetStudentPerTestRequest, EnrollmentService_GetStudentPerTestServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetStudentPerTest not implemented")
+func (UnimplementedEnrollmentServiceServer) GetStudentsPerTest(*GetStudentsPerTestRequest, EnrollmentService_GetStudentsPerTestServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetStudentsPerTest not implemented")
 }
 func (UnimplementedEnrollmentServiceServer) mustEmbedUnimplementedEnrollmentServiceServer() {}
 
@@ -164,24 +164,24 @@ func (x *enrollmentServiceEnrollServer) Recv() (*EnrollmentRequest, error) {
 	return m, nil
 }
 
-func _EnrollmentService_GetStudentPerTest_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetStudentPerTestRequest)
+func _EnrollmentService_GetStudentsPerTest_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetStudentsPerTestRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(EnrollmentServiceServer).GetStudentPerTest(m, &enrollmentServiceGetStudentPerTestServer{stream})
+	return srv.(EnrollmentServiceServer).GetStudentsPerTest(m, &enrollmentServiceGetStudentsPerTestServer{stream})
 }
 
-type EnrollmentService_GetStudentPerTestServer interface {
+type EnrollmentService_GetStudentsPerTestServer interface {
 	Send(*studentpb.Student) error
 	grpc.ServerStream
 }
 
-type enrollmentServiceGetStudentPerTestServer struct {
+type enrollmentServiceGetStudentsPerTestServer struct {
 	grpc.ServerStream
 }
 
-func (x *enrollmentServiceGetStudentPerTestServer) Send(m *studentpb.Student) error {
+func (x *enrollmentServiceGetStudentsPerTestServer) Send(m *studentpb.Student) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -199,8 +199,8 @@ var EnrollmentService_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 		{
-			StreamName:    "GetStudentPerTest",
-			Handler:       _EnrollmentService_GetStudentPerTest_Handler,
+			StreamName:    "GetStudentsPerTest",
+			Handler:       _EnrollmentService_GetStudentsPerTest_Handler,
 			ServerStreams: true,
 		},
 	},
