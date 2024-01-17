@@ -8,6 +8,7 @@ package testpb
 
 import (
 	context "context"
+	questionpb "github.com/nicrodriguezval/grpc/protos/questionpb"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	TestService_GetTest_FullMethodName    = "/test.TestService/GetTest"
 	TestService_CreateTest_FullMethodName = "/test.TestService/CreateTest"
+	TestService_TakeTest_FullMethodName   = "/test.TestService/TakeTest"
 )
 
 // TestServiceClient is the client API for TestService service.
@@ -29,6 +31,7 @@ const (
 type TestServiceClient interface {
 	GetTest(ctx context.Context, in *GetTestRequest, opts ...grpc.CallOption) (*Test, error)
 	CreateTest(ctx context.Context, in *Test, opts ...grpc.CallOption) (*CreateTestResponse, error)
+	TakeTest(ctx context.Context, opts ...grpc.CallOption) (TestService_TakeTestClient, error)
 }
 
 type testServiceClient struct {
@@ -57,12 +60,44 @@ func (c *testServiceClient) CreateTest(ctx context.Context, in *Test, opts ...gr
 	return out, nil
 }
 
+func (c *testServiceClient) TakeTest(ctx context.Context, opts ...grpc.CallOption) (TestService_TakeTestClient, error) {
+	stream, err := c.cc.NewStream(ctx, &TestService_ServiceDesc.Streams[0], TestService_TakeTest_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &testServiceTakeTestClient{stream}
+	return x, nil
+}
+
+type TestService_TakeTestClient interface {
+	Send(*TakeTestRequest) error
+	Recv() (*questionpb.Question, error)
+	grpc.ClientStream
+}
+
+type testServiceTakeTestClient struct {
+	grpc.ClientStream
+}
+
+func (x *testServiceTakeTestClient) Send(m *TakeTestRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *testServiceTakeTestClient) Recv() (*questionpb.Question, error) {
+	m := new(questionpb.Question)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // TestServiceServer is the server API for TestService service.
 // All implementations must embed UnimplementedTestServiceServer
 // for forward compatibility
 type TestServiceServer interface {
 	GetTest(context.Context, *GetTestRequest) (*Test, error)
 	CreateTest(context.Context, *Test) (*CreateTestResponse, error)
+	TakeTest(TestService_TakeTestServer) error
 	mustEmbedUnimplementedTestServiceServer()
 }
 
@@ -75,6 +110,9 @@ func (UnimplementedTestServiceServer) GetTest(context.Context, *GetTestRequest) 
 }
 func (UnimplementedTestServiceServer) CreateTest(context.Context, *Test) (*CreateTestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTest not implemented")
+}
+func (UnimplementedTestServiceServer) TakeTest(TestService_TakeTestServer) error {
+	return status.Errorf(codes.Unimplemented, "method TakeTest not implemented")
 }
 func (UnimplementedTestServiceServer) mustEmbedUnimplementedTestServiceServer() {}
 
@@ -125,6 +163,32 @@ func _TestService_CreateTest_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestService_TakeTest_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(TestServiceServer).TakeTest(&testServiceTakeTestServer{stream})
+}
+
+type TestService_TakeTestServer interface {
+	Send(*questionpb.Question) error
+	Recv() (*TakeTestRequest, error)
+	grpc.ServerStream
+}
+
+type testServiceTakeTestServer struct {
+	grpc.ServerStream
+}
+
+func (x *testServiceTakeTestServer) Send(m *questionpb.Question) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *testServiceTakeTestServer) Recv() (*TakeTestRequest, error) {
+	m := new(TakeTestRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // TestService_ServiceDesc is the grpc.ServiceDesc for TestService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -141,6 +205,13 @@ var TestService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestService_CreateTest_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "TakeTest",
+			Handler:       _TestService_TakeTest_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "protos/testpb/test.proto",
 }

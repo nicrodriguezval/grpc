@@ -89,6 +89,32 @@ func (r *PostgresRepository) GetStudentsPerTest(ctx context.Context, testId stri
 	return students, nil
 }
 
+func (r *PostgresRepository) GetQuestionsPerTest(ctx context.Context, testId string) ([]*models.Question, error) {
+	rows, err := r.db.QueryContext(ctx, "SELECT id, question FROM questions WHERE test_id = $1", testId)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	questions := make([]*models.Question, 0)
+	for rows.Next() {
+		question := models.Question{}
+		err := rows.Scan(&question.Id, &question.Question)
+		if err != nil {
+			return nil, err
+		}
+		questions = append(questions, &question)
+	}
+
+	return questions, nil
+}
+
 func (r *PostgresRepository) Close() error {
 	return r.db.Close()
 }
