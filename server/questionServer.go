@@ -24,8 +24,7 @@ func (s *QuestionServer) CreateQuestions(stream questionpb.QuestionService_Creat
 			return stream.SendAndClose(&questionpb.CreateQuestionResponse{
 				Success: true,
 			})
-		}
-		if err != nil {
+		} else if err != nil {
 			return err
 		}
 
