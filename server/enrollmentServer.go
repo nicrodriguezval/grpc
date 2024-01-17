@@ -27,8 +27,7 @@ func (s *EnrollmentServer) Enroll(stream enrollmentpb.EnrollmentService_EnrollSe
 			return stream.SendAndClose(&enrollmentpb.EnrollmentResponse{
 				Success: true,
 			})
-		}
-		if err != nil {
+		} else if err != nil {
 			return err
 		}
 
@@ -57,15 +56,15 @@ func (s *EnrollmentServer) GetStudentPerTest(
 	}
 
 	for _, student := range students {
+		time.Sleep(time.Second)
+
 		student := &studentpb.Student{
 			Id:   student.Id,
 			Name: student.Name,
 			Age:  student.Age,
 		}
 
-		time.Sleep(time.Second)
-		err := stream.Send(student)
-		if err != nil {
+		if err := stream.Send(student); err != nil {
 			return err
 		}
 	}
