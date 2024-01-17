@@ -3,33 +3,33 @@ package server
 import (
 	"context"
 	"github.com/nicrodriguezval/grpc/models"
-	studentpb2 "github.com/nicrodriguezval/grpc/protos/studentpb"
+	"github.com/nicrodriguezval/grpc/protos/studentpb"
 	"github.com/nicrodriguezval/grpc/repository"
 )
 
 type StudentServer struct {
 	repo repository.Repository
-	studentpb2.UnimplementedStudentServiceServer
+	studentpb.UnimplementedStudentServiceServer
 }
 
 func NewStudentServer(repo repository.Repository) *StudentServer {
 	return &StudentServer{repo: repo}
 }
 
-func (s *StudentServer) GetStudent(ctx context.Context, req *studentpb2.GetStudentRequest) (*studentpb2.Student, error) {
+func (s *StudentServer) GetStudent(ctx context.Context, req *studentpb.GetStudentRequest) (*studentpb.Student, error) {
 	student, err := s.repo.GetStudent(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}
 
-	return &studentpb2.Student{
+	return &studentpb.Student{
 		Id:   student.Id,
 		Name: student.Name,
 		Age:  student.Age,
 	}, nil
 }
 
-func (s *StudentServer) CreateStudent(ctx context.Context, req *studentpb2.Student) (*studentpb2.CreateStudentResponse, error) {
+func (s *StudentServer) CreateStudent(ctx context.Context, req *studentpb.Student) (*studentpb.CreateStudentResponse, error) {
 	student := &models.Student{
 		Id:   req.GetId(),
 		Name: req.GetName(),
@@ -41,7 +41,7 @@ func (s *StudentServer) CreateStudent(ctx context.Context, req *studentpb2.Stude
 		return nil, err
 	}
 
-	return &studentpb2.CreateStudentResponse{
+	return &studentpb.CreateStudentResponse{
 		Id: student.Id,
 	}, nil
 }
